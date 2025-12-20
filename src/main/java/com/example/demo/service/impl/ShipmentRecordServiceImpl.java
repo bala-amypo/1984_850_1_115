@@ -9,32 +9,19 @@ import java.util.*;
 
 @Service
 public class ShipmentRecordServiceImpl implements ShipmentRecordService {
-    private final ShipmentRecordRepository repo;
+  private final ShipmentRecordRepository repo;
+  public ShipmentRecordServiceImpl(ShipmentRecordRepository repo) { this.repo = repo; }
 
-    public ShipmentRecordServiceImpl(ShipmentRecordRepository repo) {
-        this.repo = repo;
-    }
+  @Override public ShipmentRecord createShipment(ShipmentRecord shipment) { return repo.save(shipment); }
 
-    @Override
-    public ShipmentRecord createShipment(ShipmentRecord shipment) {
-        return repo.save(shipment);
-    }
+  @Override public ShipmentRecord updateShipmentStatus(Long id, String newStatus) {
+    ShipmentRecord sr = repo.findById(id)
+      .orElseThrow(() -> new ResourceNotFoundException("Shipment not found"));
+    sr.setStatus(newStatus);
+    return repo.save(sr);
+  }
 
-    @Override
-    public ShipmentRecord updateShipmentStatus(Long id, String newStatus) {
-        ShipmentRecord sr = repo.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Shipment not found"));
-        sr.setStatus(newStatus);
-        return repo.save(sr);
-    }
+  @Override public Optional<ShipmentRecord> getShipmentByCode(String code) { return repo.findByShipmentCode(code); }
 
-    @Override
-    public Optional<ShipmentRecord> getShipmentByCode(String code) {
-        return repo.findByShipmentCode(code);
-    }
-
-    @Override
-    public List<ShipmentRecord> getAllShipments() {
-        return repo.findAll();
-    }
+  @Override public List<ShipmentRecord> getAllShipments() { return repo.findAll(); }
 }
