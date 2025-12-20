@@ -1,3 +1,4 @@
+/*
 package com.example.demo.config;
 
 import io.swagger.v3.oas.models.OpenAPI;
@@ -17,3 +18,4 @@ public class SwaggerConfig {
                 .description("API documentation for Cold Chain Temperature Breach Alert System"));
     }
 }
+*/
