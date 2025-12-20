@@ -25,16 +25,16 @@ import static org.mockito.Mockito.*;
 
 /**
  * 64-Test TestNG Suite
- * Covers:
- * 1. Servlet Tests
- * 2. CRUD
- * 3. DI/IoC
- * 4. Hibernate behavior
- * 5. JPA/Normalization
- * 6. Relations
- * 7. Security/JWT
- * 8. JPQL/HQL-like queries
- */
+  * Covers:
+   * 1. Servlet Tests
+    * 2. CRUD
+     * 3. DI/IoC
+      * 4. Hibernate behavior
+       * 5. JPA/Normalization
+        * 6. Relations
+         * 7. Security/JWT
+          * 8. JPQL/HQL-like queries
+           */
 @Listeners(TestResultListener.class)
 public class ColdChainSystemTest {
 
