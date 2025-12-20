@@ -29,5 +29,6 @@ public class ShipmentRecord {
         if (status == null || status.isBlank()) status = "IN_TRANSIT";
     }
 
-    // getters and setters...
+   public String getStatus() { return status; }
+public void setStatus(String status) { this.status = status; }
 }
