@@ -79,7 +79,7 @@
 <dependency>
     <groupId>mysql</groupId>
     <artifactId>mysql-connector-j</artifactId>
-    <version>9.0.0</version> <!-- latest stable -->
+    <version>8.0.33</version> <!-- latest stable in Maven Central -->
     <scope>runtime</scope>
 </dependency>
 <dependency>
