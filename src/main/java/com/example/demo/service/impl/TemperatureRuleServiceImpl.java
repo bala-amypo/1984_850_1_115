@@ -5,26 +5,32 @@ import com.example.demo.repository.TemperatureRuleRepository;
 import com.example.demo.service.TemperatureRuleService;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TemperatureRuleServiceImpl implements TemperatureRuleService {
-  private final TemperatureRuleRepository repo;
-  public TemperatureRuleServiceImpl(TemperatureRuleRepository repo) { this.repo = repo; }
+    private final TemperatureRuleRepository temperatureRuleRepository;
 
-  @Override
-  public TemperatureRule createRule(TemperatureRule rule) {
-    if (rule.getMinTemp() == null || rule.getMaxTemp() == null || rule.getMinTemp() >= rule.getMaxTemp())
-      throw new IllegalArgumentException("minTemp must be less than maxTemp");
-    if (rule.getEffectiveFrom() != null && rule.getEffectiveTo() != null
-        && !rule.getEffectiveTo().isAfter(rule.getEffectiveFrom()))
-      throw new IllegalArgumentException("effectiveTo must be after effectiveFrom");
-    return repo.save(rule);
-  }
+    public TemperatureRuleServiceImpl(TemperatureRuleRepository temperatureRuleRepository) {
+        this.temperatureRuleRepository = temperatureRuleRepository;
+    }
 
-  @Override public Optional<TemperatureRule> getRuleForProduct(String productType, LocalDate date) {
-    return repo.findApplicableRule(productType, date);
-  }
+    @Override
+    public TemperatureRule createRule(TemperatureRule rule) {
+        if (rule.getMinTemp() >= rule.getMaxTemp()) {
+            throw new IllegalArgumentException("minTemp must be less than maxTemp");
+        }
+        return temperatureRuleRepository.save(rule);
+    }
 
-  @Override public List<TemperatureRule> getActiveRules() { return repo.findByActiveTrue(); }
+    @Override
+    public Optional<TemperatureRule> getRuleForProduct(String productType, LocalDate date) {
+        return temperatureRuleRepository.findApplicableRule(productType, date);
+    }
+
+    @Override
+    public List<TemperatureRule> getActiveRules() {
+        return temperatureRuleRepository.findByActiveTrue();
+    }
 }

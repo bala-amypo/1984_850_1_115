@@ -5,23 +5,37 @@ import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.ShipmentRecordRepository;
 import com.example.demo.service.ShipmentRecordService;
 import org.springframework.stereotype.Service;
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ShipmentRecordServiceImpl implements ShipmentRecordService {
-  private final ShipmentRecordRepository repo;
-  public ShipmentRecordServiceImpl(ShipmentRecordRepository repo) { this.repo = repo; }
+    private final ShipmentRecordRepository shipmentRecordRepository;
 
-  @Override public ShipmentRecord createShipment(ShipmentRecord shipment) { return repo.save(shipment); }
+    public ShipmentRecordServiceImpl(ShipmentRecordRepository shipmentRecordRepository) {
+        this.shipmentRecordRepository = shipmentRecordRepository;
+    }
 
-  @Override public ShipmentRecord updateShipmentStatus(Long id, String newStatus) {
-    ShipmentRecord sr = repo.findById(id)
-      .orElseThrow(() -> new ResourceNotFoundException("Shipment not found"));
-    sr.setStatus(newStatus);
-    return repo.save(sr);
-  }
+    @Override
+    public ShipmentRecord createShipment(ShipmentRecord shipment) {
+        return shipmentRecordRepository.save(shipment);
+    }
 
-  @Override public Optional<ShipmentRecord> getShipmentByCode(String code) { return repo.findByShipmentCode(code); }
+    @Override
+    public ShipmentRecord updateShipmentStatus(Long id, String newStatus) {
+        ShipmentRecord shipment = shipmentRecordRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Shipment not found"));
+        shipment.setStatus(newStatus);
+        return shipmentRecordRepository.save(shipment);
+    }
 
-  @Override public List<ShipmentRecord> getAllShipments() { return repo.findAll(); }
+    @Override
+    public Optional<ShipmentRecord> getShipmentByCode(String shipmentCode) {
+        return shipmentRecordRepository.findByShipmentCode(shipmentCode);
+    }
+
+    @Override
+    public List<ShipmentRecord> getAllShipments() {
+        return shipmentRecordRepository.findAll();
+    }
 }
