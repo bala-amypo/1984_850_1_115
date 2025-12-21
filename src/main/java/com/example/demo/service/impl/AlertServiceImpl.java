@@ -8,9 +8,19 @@ import java.util.List;
 
 @Service
 public class AlertServiceImpl implements AlertService {
-  private final AlertRecordRepository repo;
-  public AlertServiceImpl(AlertRecordRepository repo) { this.repo = repo; }
+    private final AlertRecordRepository alertRecordRepository;
 
-  @Override public AlertRecord triggerAlert(AlertRecord alert) { return repo.save(alert); }
-  @Override public List<AlertRecord> getAlertsByShipment(Long shipmentId) { return repo.findByShipmentId(shipmentId); }
+    public AlertServiceImpl(AlertRecordRepository alertRecordRepository) {
+        this.alertRecordRepository = alertRecordRepository;
+    }
+
+    @Override
+    public AlertRecord triggerAlert(AlertRecord alert) {
+        return alertRecordRepository.save(alert);
+    }
+
+    @Override
+    public List<AlertRecord> getAlertsByShipment(Long shipmentId) {
+        return alertRecordRepository.findByShipmentId(shipmentId);
+    }
 }
