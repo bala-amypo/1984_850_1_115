@@ -4,12 +4,14 @@ import com.example.demo.entity.TemperatureRule;
 import com.example.demo.repository.TemperatureRuleRepository;
 import com.example.demo.service.TemperatureRuleService;
 import org.springframework.stereotype.Service;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class TemperatureRuleServiceImpl implements TemperatureRuleService {
+
     private final TemperatureRuleRepository temperatureRuleRepository;
 
     public TemperatureRuleServiceImpl(TemperatureRuleRepository temperatureRuleRepository) {

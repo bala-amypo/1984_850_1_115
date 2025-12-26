@@ -5,11 +5,13 @@ import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.ShipmentRecordRepository;
 import com.example.demo.service.ShipmentRecordService;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class ShipmentRecordServiceImpl implements ShipmentRecordService {
+
     private final ShipmentRecordRepository shipmentRecordRepository;
 
     public ShipmentRecordServiceImpl(ShipmentRecordRepository shipmentRecordRepository) {
