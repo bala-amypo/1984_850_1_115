@@ -1,35 +1,53 @@
 package com.example.demo.controller;
 
-import com.example.demo.entity.BreachRecord;
-import com.example.demo.service.BreachDetectionService;
+import com.example.demo.dto.AuthResponse;
+import com.example.demo.dto.LoginRequest;
+import com.example.demo.dto.RegisterRequest;
+import com.example.demo.entity.User;
+import com.example.demo.security.JwtUtil;
+import com.example.demo.service.UserService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
 
 @RestController
-@RequestMapping("/breaches")
-public class BreachRecordController {
-    private final BreachDetectionService breachDetectionService;
+@RequestMapping("/auth")
+public class AuthController {
 
-    public BreachRecordController(BreachDetectionService breachDetectionService) {
-        this.breachDetectionService = breachDetectionService;
+    private final UserService userService;
+    private final AuthenticationManager authenticationManager;
+    private final JwtUtil jwtUtil;
+
+    public AuthController(UserService userService, AuthenticationManager authenticationManager, JwtUtil jwtUtil) {
+        this.userService = userService;
+        this.authenticationManager = authenticationManager;
+        this.jwtUtil = jwtUtil;
     }
 
-    @PostMapping
-    public ResponseEntity<BreachRecord> logBreach(@RequestBody BreachRecord breach) {
-        BreachRecord logged = breachDetectionService.logBreach(breach);
-        return ResponseEntity.ok(logged);
+    @PostMapping("/login")
+    public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
+
+        User user = userService.findByEmail(request.getEmail());
+        String token = jwtUtil.generateToken(user.getId(), user.getEmail(), user.getRole());
+
+        AuthResponse response = new AuthResponse(token, user.getId(), user.getEmail(), user.getRole());
+        return ResponseEntity.ok(response);
     }
 
-    @PutMapping("/{id}/resolve")
-    public ResponseEntity<BreachRecord> resolveBreach(@PathVariable Long id) {
-        BreachRecord resolved = breachDetectionService.resolveBreach(id);
-        return ResponseEntity.ok(resolved);
-    }
+    @PostMapping("/register")
+    public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest request) {
+        User user = new User();
+        user.setFullName(request.getFullName());
+        user.setEmail(request.getEmail());
+        user.setPassword(request.getPassword());
 
-    @GetMapping("/shipment/{shipmentId}")
-    public ResponseEntity<List<BreachRecord>> getBreachesByShipment(@PathVariable Long shipmentId) {
-        List<BreachRecord> breaches = breachDetectionService.getBreachesByShipment(shipmentId);
-        return ResponseEntity.ok(breaches);
+        User savedUser = userService.registerUser(user);
+        String token = jwtUtil.generateToken(savedUser.getId(), savedUser.getEmail(), savedUser.getRole());
+
+        AuthResponse response = new AuthResponse(token, savedUser.getId(), savedUser.getEmail(), savedUser.getRole());
+        return ResponseEntity.ok(response);
     }
 }
