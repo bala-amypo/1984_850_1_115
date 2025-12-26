@@ -4,12 +4,13 @@ import com.example.demo.entity.ShipmentRecord;
 import com.example.demo.service.ShipmentRecordService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/shipments")
 public class ShipmentRecordController {
+
     private final ShipmentRecordService shipmentRecordService;
 
     public ShipmentRecordController(ShipmentRecordService shipmentRecordService) {
@@ -18,25 +19,23 @@ public class ShipmentRecordController {
 
     @PostMapping
     public ResponseEntity<ShipmentRecord> createShipment(@RequestBody ShipmentRecord shipment) {
-        ShipmentRecord created = shipmentRecordService.createShipment(shipment);
-        return ResponseEntity.ok(created);
+        return ResponseEntity.ok(shipmentRecordService.createShipment(shipment));
     }
 
     @PutMapping("/{id}/status")
-    public ResponseEntity<ShipmentRecord> updateShipmentStatus(@PathVariable Long id, @RequestParam String status) {
-        ShipmentRecord updated = shipmentRecordService.updateShipmentStatus(id, status);
-        return ResponseEntity.ok(updated);
+    public ResponseEntity<ShipmentRecord> updateStatus(@PathVariable Long id, @RequestBody String status) {
+        return ResponseEntity.ok(shipmentRecordService.updateShipmentStatus(id, status));
     }
 
     @GetMapping("/{code}")
-    public ResponseEntity<ShipmentRecord> getShipmentByCode(@PathVariable String code) {
-        Optional<ShipmentRecord> shipment = shipmentRecordService.getShipmentByCode(code);
-        return shipment.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<ShipmentRecord> getByCode(@PathVariable String code) {
+        return shipmentRecordService.getShipmentByCode(code)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping
     public ResponseEntity<List<ShipmentRecord>> getAllShipments() {
-        List<ShipmentRecord> shipments = shipmentRecordService.getAllShipments();
-        return ResponseEntity.ok(shipments);
+        return ResponseEntity.ok(shipmentRecordService.getAllShipments());
     }
 }

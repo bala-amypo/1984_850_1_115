@@ -4,11 +4,13 @@ import com.example.demo.entity.BreachRecord;
 import com.example.demo.service.BreachDetectionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
 @RequestMapping("/breaches")
 public class BreachRecordController {
+
     private final BreachDetectionService breachDetectionService;
 
     public BreachRecordController(BreachDetectionService breachDetectionService) {
@@ -17,19 +19,16 @@ public class BreachRecordController {
 
     @PostMapping
     public ResponseEntity<BreachRecord> logBreach(@RequestBody BreachRecord breach) {
-        BreachRecord logged = breachDetectionService.logBreach(breach);
-        return ResponseEntity.ok(logged);
+        return ResponseEntity.ok(breachDetectionService.logBreach(breach));
     }
 
     @PutMapping("/{id}/resolve")
     public ResponseEntity<BreachRecord> resolveBreach(@PathVariable Long id) {
-        BreachRecord resolved = breachDetectionService.resolveBreach(id);
-        return ResponseEntity.ok(resolved);
+        return ResponseEntity.ok(breachDetectionService.resolveBreach(id));
     }
 
     @GetMapping("/shipment/{shipmentId}")
     public ResponseEntity<List<BreachRecord>> getBreachesByShipment(@PathVariable Long shipmentId) {
-        List<BreachRecord> breaches = breachDetectionService.getBreachesByShipment(shipmentId);
-        return ResponseEntity.ok(breaches);
+        return ResponseEntity.ok(breachDetectionService.getBreachesByShipment(shipmentId));
     }
 }
