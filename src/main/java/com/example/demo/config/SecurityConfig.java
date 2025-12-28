@@ -70,17 +70,43 @@ public CorsConfigurationSource corsConfigurationSource() {
 }
 
 
-  @Bean
+//   @Bean
+// public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
+//     http
+//         .cors(cors -> {})   // explicitly enable
+//         .csrf(csrf -> csrf.disable())
+//         .sessionManagement(session ->
+//             session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+//         )
+//         .authorizeHttpRequests(auth -> auth
+//             .anyRequest().permitAll()
+//         );
+
+//     return http.build();
+// }
+
+@Bean
 public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
     http
-        .cors(cors -> {})   // explicitly enable
+        .cors(cors -> {})
         .csrf(csrf -> csrf.disable())
         .sessionManagement(session ->
             session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         )
         .authorizeHttpRequests(auth -> auth
-            .anyRequest().permitAll()
+            .requestMatchers(
+                "/auth/**",
+                "/v3/api-docs/**",
+                "/swagger-ui/**",
+                "/swagger-ui.html"
+            ).permitAll()
+            .anyRequest().authenticated()
+        )
+        .addFilterBefore(
+            jwtAuthenticationFilter,
+            UsernamePasswordAuthenticationFilter.class
         );
 
     return http.build();
