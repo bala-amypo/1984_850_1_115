@@ -138,4 +138,22 @@ public class JwtUtil {
                 .getBody()
                 .getSubject();
     }
+    public Long extractUserId(String token) {
+    return Jwts.parserBuilder()
+            .setSigningKey(signingKey)
+            .build()
+            .parseClaimsJws(token)
+            .getBody()
+            .get("userId", Long.class);
+}
+
+public String extractRole(String token) {
+    return Jwts.parserBuilder()
+            .setSigningKey(signingKey)
+            .build()
+            .parseClaimsJws(token)
+            .getBody()
+            .get("role", String.class);
+}
+
 }
